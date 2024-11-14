@@ -4,132 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Killa Hub Key System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Roboto', sans-serif;
-            background: #1f1f1f;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #fff;
-            overflow: hidden;
+            margin: 0;
         }
-
         .container {
             text-align: center;
-            background: linear-gradient(145deg, #2a2a2a, #3e3e3e);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
-            animation: fadeIn 1.5s ease-in-out;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
         }
-
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            color: #48C9B0;
-            letter-spacing: 2px;
-            animation: slideUp 1s ease-out;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
-
+        .key {
+            font-size: 18px;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e1e1e1;
+            border-radius: 5px;
+            word-wrap: break-word;
+        }
         button {
-            background-color: #48C9B0;
+            padding: 10px 20px;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 1.2em;
+            border-radius: 5px;
             cursor: pointer;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease;
         }
-
         button:hover {
-            background-color: #33b29b;
-            transform: translateY(-3px);
-        }
-
-        button:active {
-            transform: translateY(1px);
-        }
-
-        .key-display {
-            margin-top: 30px;
-            background-color: #333;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            font-size: 1.2em;
-            word-wrap: break-word;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .key-display span {
-            color: #48C9B0;
-        }
-
-        .clipboard-icon {
-            cursor: pointer;
-            margin-left: 10px;
-            font-size: 1.5em;
-            transition: color 0.3s;
-        }
-
-        .clipboard-icon:hover {
-            color: #33b29b;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            0% { transform: translateY(30px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Killa Hub Key System</h1>
-        <button onclick="generateKey()">Get Key</button>
-        <div id="key" class="key-display"></div>
-    </div>
+<div class="container">
+    <h1>Killa Hub Key System</h1>
+    <div id="key" class="key">Fetching your key...</div>
+    <button onclick="copyToClipboard()">Copy Key</button>
+</div>
 
-    <script>
-        function generateKey() {
-            fetch('https://pastebin.com/raw/8BShMq58')
-                .then(response => response.text())
-                .then(key => {
-                    const keyElement = document.getElementById('key');
-                    keyElement.innerHTML = `Generated Key: <span>${key}</span> <i class="clipboard-icon" onclick="copyKey('${key}')">&#x1F4CB;</i>`;
-                    // Optional: Add smooth animation after key is shown
-                    keyElement.style.animation = 'fadeIn 1s ease-out';
-                })
-                .catch(err => {
-                    alert('Error fetching key. Please try again.');
-                    console.error('Error fetching key:', err);
-                });
-        }
+<script>
+    // URL to the raw file on GitHub
+    const keyUrl = 'https://raw.githubusercontent.com/BadnanaX/my-full-security/refs/heads/main/1';
 
-        function copyKey(key) {
-            navigator.clipboard.writeText(key).then(() => {
+    // Fetch the key from the URL
+    fetch(keyUrl)
+        .then(response => response.text()) // Get the response as text (key in plain text)
+        .then(key => {
+            // Display the key in the 'key' div
+            document.getElementById('key').textContent = key;
+        })
+        .catch(err => {
+            // Handle any errors (e.g., network issues)
+            console.error('Error fetching key:', err);
+            document.getElementById('key').textContent = 'Error fetching key. Please try again.';
+        });
+
+    // Function to copy the key to clipboard
+    function copyToClipboard() {
+        const keyElement = document.getElementById('key');
+        const key = keyElement.textContent;
+        navigator.clipboard.writeText(key)
+            .then(() => {
                 alert('Key copied to clipboard!');
-            }).catch(err => {
-                console.error('Error copying to clipboard:', err);
+            })
+            .catch(err => {
+                console.error('Error copying key:', err);
             });
-        }
-    </script>
+    }
+</script>
 
 </body>
 </html>
