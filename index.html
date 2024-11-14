@@ -144,7 +144,7 @@
                 document.getElementById("keyDisplay").innerHTML = `
                     <span>Your Key: <strong>${key}</strong></span>
                     <span class="clipboard-icon" onclick="copyToClipboard('${key}')">📋</span>
-                    <span class="clipboard-text" onclick="copyToClipboard('${key}')">Click to Copy</span>
+                    <span class="clipboard-text" onclick="copyToClipboard('${key}')">Click the clipboard icon to copy</span>
                 `;
                 generateKeyButton.innerText = "Generate Key";
                 generateKeyButton.disabled = false;
@@ -157,7 +157,8 @@
 
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert("Key copied to clipboard!");
+                const clipboardText = document.querySelector('.clipboard-text');
+                clipboardText.innerText = "Copied!";
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
             });
