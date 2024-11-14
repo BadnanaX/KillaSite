@@ -11,59 +11,114 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #2b5876, #4e4376);
+            background: linear-gradient(135deg, #FF6F61, #4E4376);
             color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
+            animation: backgroundAnimation 5s infinite alternate;
         }
+
         .container {
             background-color: rgba(0, 0, 0, 0.85);
-            padding: 40px;
-            border-radius: 15px;
+            padding: 50px;
+            border-radius: 20px;
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
             text-align: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 1s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 1s ease;
         }
+
         h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 32px;
             color: #FF3E3E;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
             animation: slideIn 0.8s ease;
         }
+
         .button {
             margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 18px;
-            font-weight: 500;
+            padding: 15px 25px;
+            font-size: 20px;
+            font-weight: 600;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            outline: none;
         }
+
         .button.inactive {
             background-color: #7289da;
         }
+
         .button.active {
             background-color: #4CAF50;
         }
+
         .key-display {
-            margin-top: 20px;
+            margin-top: 30px;
             font-size: 18px;
             color: #ffdf91;
             word-wrap: break-word;
+            line-height: 1.5;
+            animation: fadeIn 1s ease;
         }
+
         .clipboard-icon {
             cursor: pointer;
             display: inline-block;
             margin-left: 10px;
             color: #ffdf91;
-            font-size: 20px;
+            font-size: 22px;
+        }
+
+        .clipboard-text {
+            font-size: 16px;
+            color: #FFEE58;
+            margin-top: 10px;
+            display: block;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background: linear-gradient(135deg, #FF6F61, #4E4376);
+            }
+            50% {
+                background: linear-gradient(135deg, #FF3E3E, #7B1FA2);
+            }
+            100% {
+                background: linear-gradient(135deg, #FF6F61, #FF3E3E);
+            }
         }
     </style>
 </head>
@@ -87,8 +142,9 @@
                 const key = await response.text();
 
                 document.getElementById("keyDisplay").innerHTML = `
-                    <span>Your Key: ${key}</span>
+                    <span>Your Key: <strong>${key}</strong></span>
                     <span class="clipboard-icon" onclick="copyToClipboard('${key}')">📋</span>
+                    <span class="clipboard-text" onclick="copyToClipboard('${key}')">Click to Copy</span>
                 `;
                 generateKeyButton.innerText = "Generate Key";
                 generateKeyButton.disabled = false;
