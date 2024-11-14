@@ -156,11 +156,14 @@
         }
 
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
+            // Using the new clipboard API for better compatibility
+            navigator.clipboard.writeText(text).then(function() {
                 const clipboardText = document.querySelector('.clipboard-text');
                 clipboardText.innerText = "Copied!";
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
+            }).catch(function(err) {
+                console.error('Error copying text: ', err);
+                const clipboardText = document.querySelector('.clipboard-text');
+                clipboardText.innerText = "Failed to copy!";
             });
         }
     </script>
