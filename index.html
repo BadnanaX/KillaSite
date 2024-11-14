@@ -132,33 +132,41 @@
     </div>
 
     <script>
-        async function generateKey() {
+        // Function to fetch the key from the provided URL and display it
+        function generateKey() {
             const generateKeyButton = document.getElementById("generateKeyButton");
             generateKeyButton.disabled = true;
             generateKeyButton.classList.remove("inactive");
             generateKeyButton.classList.add("active");
             generateKeyButton.innerText = "Generating Key...";
 
-            try {
-                const response = await fetch('https://raw.githubusercontent.com/BadnanaX/my-full-security/refs/heads/main/1');
-                const key = await response.text();
+            // Fetch the key from the provided URL
+            fetch('https://raw.githubusercontent.com/BadnanaX/my-full-security/refs/heads/main/1')
+                .then(response => response.text())
+                .then(data => {
+                    const key = data.trim(); // Trim any extra whitespace from the key
 
-                document.getElementById("keyDisplay").innerHTML = `
-                    <span>Your Key: <strong>${key}</strong></span>
-                    <span class="clipboard-icon" onclick="copyToClipboard('${key}')">
-                        <i class="fas fa-clipboard"></i>
-                    </span>
-                    <span class="clipboard-text" onclick="copyToClipboard('${key}')">Click the clipboard icon to copy</span>
-                `;
-                generateKeyButton.innerText = "Generate Key";
-                generateKeyButton.disabled = false;
-            } catch (error) {
-                document.getElementById("keyDisplay").innerText = "Error fetching key. Please try again.";
-                generateKeyButton.innerText = "Generate Key";
-                generateKeyButton.disabled = false;
-            }
+                    // Display the fetched key with the clipboard icon
+                    document.getElementById("keyDisplay").innerHTML = `
+                        <span>Your Key: <strong>${key}</strong></span>
+                        <span class="clipboard-icon" onclick="copyToClipboard('${key}')">
+                            <i class="fas fa-clipboard"></i>
+                        </span>
+                        <span class="clipboard-text" onclick="copyToClipboard('${key}')">Click the clipboard icon to copy</span>
+                    `;
+                    
+                    generateKeyButton.innerText = "Generate Key";
+                    generateKeyButton.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error fetching key:', error);
+                    document.getElementById("keyDisplay").innerHTML = 'Error fetching key. Please try again.';
+                    generateKeyButton.innerText = "Generate Key";
+                    generateKeyButton.disabled = false;
+                });
         }
 
+        // Function to copy the key to the clipboard
         function copyToClipboard(text) {
             // Using the new clipboard API for better compatibility
             navigator.clipboard.writeText(text).then(function() {
