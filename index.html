@@ -4,74 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Killa Hub Key System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: 'Roboto', sans-serif;
+            background: #1f1f1f;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             color: #fff;
+            overflow: hidden;
         }
 
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(145deg, #2a2a2a, #3e3e3e);
             padding: 40px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
-            max-width: 400px;
-            animation: fadeIn 1.2s ease;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: #ffce00;
-            font-weight: bold;
-            letter-spacing: 1px;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #48C9B0;
+            letter-spacing: 2px;
+            animation: slideUp 1s ease-out;
         }
 
         button {
-            background: linear-gradient(45deg, #ffce00, #ff8c00);
-            color: #fff;
+            background-color: #48C9B0;
+            color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 1em;
-            font-weight: bold;
-            border-radius: 25px;
+            padding: 15px 40px;
+            font-size: 1.2em;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
         }
 
         button:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 6px 20px rgba(255, 140, 0, 0.4);
+            background-color: #33b29b;
+            transform: translateY(-3px);
+        }
+
+        button:active {
+            transform: translateY(1px);
         }
 
         .key-display {
-            margin-top: 20px;
+            margin-top: 30px;
+            background-color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             font-size: 1.2em;
-            color: #ffce00;
-            animation: slideIn 0.8s ease;
+            word-wrap: break-word;
+            display: inline-block;
+            width: 100%;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .key-display span {
+            color: #48C9B0;
         }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+
+        .clipboard-icon {
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 1.5em;
+            transition: color 0.3s;
+        }
+
+        .clipboard-icon:hover {
+            color: #33b29b;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
@@ -79,26 +102,34 @@
 
     <div class="container">
         <h1>Killa Hub Key System</h1>
-        <p>Click below to generate your 24-hour key and start exploring!</p>
-        <button onclick="generateKey()">Generate Key</button>
-        <div class="key-display" id="keyDisplay"></div>
+        <button onclick="generateKey()">Get Key</button>
+        <div id="key" class="key-display"></div>
     </div>
 
     <script>
-        async function generateKey() {
-            document.getElementById('keyDisplay').textContent = "Generating your key...";
+        function generateKey() {
+            fetch('https://pastebin.com/raw/8BShMq58')
+                .then(response => response.text())
+                .then(key => {
+                    const keyElement = document.getElementById('key');
+                    keyElement.innerHTML = `Generated Key: <span>${key}</span> <i class="clipboard-icon" onclick="copyKey('${key}')">&#x1F4CB;</i>`;
+                    // Optional: Add smooth animation after key is shown
+                    keyElement.style.animation = 'fadeIn 1s ease-out';
+                })
+                .catch(err => {
+                    alert('Error fetching key. Please try again.');
+                    console.error('Error fetching key:', err);
+                });
+        }
 
-            try {
-                const response = await fetch('https://pastebin.com/raw/8BShMq58');
-                if (!response.ok) throw new Error('Failed to fetch the key');
-                
-                const key = await response.text();
-                document.getElementById('keyDisplay').textContent = `Your 24-Hour Key: ${key}`;
-            } catch (error) {
-                document.getElementById('keyDisplay').textContent = 'Error: Unable to generate key';
-                console.error(error);
-            }
+        function copyKey(key) {
+            navigator.clipboard.writeText(key).then(() => {
+                alert('Key copied to clipboard!');
+            }).catch(err => {
+                console.error('Error copying to clipboard:', err);
+            });
         }
     </script>
+
 </body>
 </html>
