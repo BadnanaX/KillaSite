@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Killa Hub Key System</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -78,6 +79,7 @@
             margin-left: 10px;
             color: #ffdf91;
             font-size: 22px;
+            transition: color 0.3s ease;
         }
 
         .clipboard-text {
@@ -143,7 +145,9 @@
 
                 document.getElementById("keyDisplay").innerHTML = `
                     <span>Your Key: <strong>${key}</strong></span>
-                    <span class="clipboard-icon" onclick="copyToClipboard('${key}')">📋</span>
+                    <span class="clipboard-icon" onclick="copyToClipboard('${key}')">
+                        <i class="fas fa-clipboard"></i>
+                    </span>
                     <span class="clipboard-text" onclick="copyToClipboard('${key}')">Click the clipboard icon to copy</span>
                 `;
                 generateKeyButton.innerText = "Generate Key";
