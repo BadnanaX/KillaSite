@@ -6,33 +6,54 @@
     <title>Killa Hub Key System</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
         }
         .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            width: 350px;
+            max-width: 100%;
         }
         h1 {
             font-size: 24px;
             margin-bottom: 20px;
+            color: #333;
         }
         .key {
-            font-size: 18px;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #e1e1e1;
-            border-radius: 5px;
+            font-size: 16px;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
             word-wrap: break-word;
+            min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #555;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .clipboard {
+            cursor: pointer;
+            margin-left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .clipboard:hover {
+            background-color: #45a049;
         }
         button {
             padding: 10px 20px;
@@ -41,9 +62,23 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #45a049;
+        }
+        .loading {
+            animation: loadingAnimation 1.5s infinite;
+            display: inline-block;
+            font-size: 18px;
+        }
+        @keyframes loadingAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .loading-spinner {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -51,39 +86,61 @@
 
 <div class="container">
     <h1>Killa Hub Key System</h1>
-    <div id="key" class="key">Fetching your key...</div>
-    <button onclick="copyToClipboard()">Copy Key</button>
+    <button id="generateBtn">Generate Key</button>
+    <div id="keyContainer" class="key"></div>
+    <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+        <span class="loading">Loading...</span>
+    </div>
 </div>
 
 <script>
-    // URL to the raw file on GitHub
-    const keyUrl = 'https://raw.githubusercontent.com/BadnanaX/my-full-security/refs/heads/main/1';
+    const keyUrl = 'https://raw.githubusercontent.com/BadnanaX/my-full-security/refs/heads/main/1'; // GitHub raw file URL
+    const generateBtn = document.getElementById('generateBtn');
+    const keyContainer = document.getElementById('keyContainer');
+    const loadingSpinner = document.getElementById('loadingSpinner');
 
-    // Fetch the key from the URL
-    fetch(keyUrl)
-        .then(response => response.text()) // Get the response as text (key in plain text)
-        .then(key => {
-            // Display the key in the 'key' div
-            document.getElementById('key').textContent = key;
-        })
-        .catch(err => {
-            // Handle any errors (e.g., network issues)
-            console.error('Error fetching key:', err);
-            document.getElementById('key').textContent = 'Error fetching key. Please try again.';
-        });
+    // Function to fetch the key from the URL
+    function fetchKey() {
+        keyContainer.textContent = ''; // Clear previous key
+        loadingSpinner.style.display = 'block'; // Show loading spinner
 
-    // Function to copy the key to clipboard
-    function copyToClipboard() {
-        const keyElement = document.getElementById('key');
-        const key = keyElement.textContent;
-        navigator.clipboard.writeText(key)
-            .then(() => {
-                alert('Key copied to clipboard!');
+        fetch(keyUrl)
+            .then(response => response.text()) // Get the response as text (key in plain text)
+            .then(key => {
+                keyContainer.textContent = key; // Show the fetched key
+                loadingSpinner.style.display = 'none'; // Hide loading spinner
+                createClipboardButton(key); // Create clipboard copy button
             })
             .catch(err => {
-                console.error('Error copying key:', err);
+                console.error('Error fetching key:', err);
+                keyContainer.textContent = 'Error fetching key. Please try again.';
+                loadingSpinner.style.display = 'none'; // Hide loading spinner
             });
     }
+
+    // Function to create clipboard copy button
+    function createClipboardButton(key) {
+        const clipboardBtn = document.createElement('button');
+        clipboardBtn.classList.add('clipboard');
+        clipboardBtn.textContent = 'Copy to Clipboard';
+        clipboardBtn.onclick = () => {
+            navigator.clipboard.writeText(key)
+                .then(() => {
+                    alert('Key copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying key:', err);
+                });
+        };
+        keyContainer.appendChild(clipboardBtn);
+    }
+
+    // Event listener for "Generate Key" button
+    generateBtn.addEventListener('click', () => {
+        fetchKey();
+        generateBtn.disabled = true; // Disable the button while key is loading
+        generateBtn.textContent = 'Generating...'; // Change button text
+    });
 </script>
 
 </body>
